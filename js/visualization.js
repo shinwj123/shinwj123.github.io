@@ -303,7 +303,7 @@ async function load3() {
 
     // Retrieve scene3
     // Work Cited: https://bl.ocks.org/d3noob/f46a355d35077a7dc12f9a97aeb6bc5d
-    var scene3 = d3.select('#scene3')
+    const scene3 = d3.select('#scene3')
     .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
