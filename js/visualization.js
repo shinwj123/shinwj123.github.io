@@ -4,9 +4,9 @@
 var scene3 = d3.select('#scene3')
 
 // set the dimensions and margins of the graph
-const margin = {top: 10, right: 100, bottom: 30, left: 30},
-                    width = 400 - margin.left - margin.right,
-                    height = 400 - margin.top - margin.bottom;
+const margin = {top: 10, right: 100, bottom: 30, left: 300},
+                    width = 1000 - margin.left - margin.right,
+                    height = 500 - margin.top - margin.bottom;
 
 async function load1() {
 
@@ -37,24 +37,41 @@ async function load1() {
 
   
       // A color scale: one color for each group
-      const myColor = d3.scaleOrdinal()
-        .domain(allGroup)
-        .range(d3.schemeSet2);
+      const myColor = d3.scaleOrdinal().domain(allGroup).range(d3.schemeSet2);
   
       // Add X axis --> it is a date format
       const x = d3.scaleLinear()
         .domain([0, 81])
         .range([ 0, width ]);
+
         scene1.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x));
+
+        // Add label for X axis
+        scene1.append("text")             
+        .attr("transform",
+              "translate(" + (width/2) + " ," + 
+                             (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .text("Days in 2022");
   
       // Add Y axis
       const y = d3.scaleLinear()
         .domain( [0,1500000])
         .range([ height, 0 ]);
+
         scene1.append("g")
         .call(d3.axisLeft(y));
+
+        // Add label for Y axis
+        scene1.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 200 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Number of Covid Cases");
   
       // Add the lines
       const line = d3.line()
@@ -69,8 +86,8 @@ async function load1() {
           .style("stroke-width", 4)
           .style("fill", "none")
 
-      // create a tooltip
-      const Tooltip = d3.select("#my_dataviz")
+      // create a tooltip for mouse hover
+      const Tooltip = d3.select("#scene1")
       .append("div")
       .style("opacity", 0)
       .attr("class", "tooltip")
@@ -160,9 +177,65 @@ async function load2() {
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform",`translate(${margin.left},${margin.top})`);
+
+  d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/vax_rate.csv").then(function(data) {
+    // group the data: one array for each value of the X axis.
+    // group the data: one array for each value of the X axis.
+    const sumstat = d3.group(data, d => d.time);
+
+    // Stack the data: each group will be represented on top of each other
+    const mygroups = ["France", "Korea", "USA"] // list of group names
+    const mygroup = [1,2,3] // list of group names
+    const stackedData = d3.stack()
+      .keys(mygroup)
+      .value(function(d, key){
+        return d[1][key].n
+      })
+      (sumstat)
   
-
-    
-
+    // Add X axis --> it is a date format
+    const x = d3.scaleLinear()
+      .domain([0, 83])
+      .range([ 0, width ]);
+      scene2.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x).ticks(5));
+  
+    // Add Y axis
+    const y = d3.scaleLinear()
+      .domain([0, 2.2])
+      .range([ height, 0 ]);
+      scene2.append("g")
+      .call(d3.axisLeft(y));
+  
+    // color palette
+    const color = d3.scaleOrdinal()
+      .domain(mygroups)
+      .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+  
+    // Show the areas
+    scene2
+      .selectAll("mylayers")
+      .data(stackedData)
+      .join("path")
+        .style("fill", function(d) { name = mygroups[d.key-1] ;  return color(name); })
+        .attr("d", d3.area()
+          .x(function(d, i) { return x(d.data[0]); })
+          .y0(function(d) { return y(d[0]); })
+          .y1(function(d) { return y(d[1]); })
+      )
+  })
 }
 
+async function load3() {
+    const scene2 = d3.select('#scene3')
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",`translate(${margin.left},${margin.top})`);
+
+  d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/..").then(function(data) {
+
+  })
+}
