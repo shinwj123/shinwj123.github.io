@@ -407,7 +407,7 @@ async function load3() {
             .style("fill", function (d) { return myColor(d.continent); } )
         .on("mouseover", mouseover )
         .on("mousemove", mousemove )
-        .on("mouseleave", mouseleave )
+        .on("mouseleave", mouseleave );
     
     }) //then(function(data) {
 } //async function load3() {
