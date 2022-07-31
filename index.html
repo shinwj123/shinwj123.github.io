@@ -8,7 +8,7 @@
         <script src="https://d3js.org/d3.v6.js"></script>
 
         <!-- Load in custom CSS -->
-        <link rel="stylesheet" type="text/css" href="./cs/style.css">
+        <!-- <link rel="stylesheet" type="text/css" href="./cs/style.css"> -->
     </head>
     <body>
         <h1 id="intro">PanExpedia Narrative Visualization for TOP 4 Most Visited Countries</h1>
@@ -47,7 +47,7 @@
             <script>
 
             // set the dimensions and margins of the graph
-            const margin = {top: 10, right: 100, bottom: 30, left: 30},
+            const margin = {top: 10, right: 100, bottom: 30, left: 100},
             width = 460 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
 
@@ -62,15 +62,11 @@
             //Read the data
             d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/covid_cases.csv",
 
-            // When reading the csv, I must format variables:
-            d => {
-                return {date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value}}).then(
-                   
-
+            // When reading the csv, I must format variables:                
             function(data) {
 
             // List of groups (here I have one group per column)
-            const allGroup = ["France", "United States", "South Korea"]
+            const allGroup = ["France", "Korea", "USA"]
 
             // Reformat the data: we need an array of arrays of {x, y} tuples
             const dataReady = allGroup.map( function(grpName) { // .map allows to do something for each element of the list
@@ -99,7 +95,7 @@
 
             // Add Y axis
             const y = d3.scaleLinear()
-            .domain( [0,20])
+            .domain( [0, 1400000])
             .range([ height, 0 ]);
             svg.append("g")
             .call(d3.axisLeft(y));
