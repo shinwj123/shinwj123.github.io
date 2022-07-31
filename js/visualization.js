@@ -1,16 +1,13 @@
 //============== env ===============//
-
-// Retrieve the scenes
-var scene3 = d3.select('#scene3')
-
-// set the dimensions and margins of the graph
+// Common dimensions and margins of the graph
 const margin = {top: 10, right: 100, bottom: 30, left: 300},
                     width = 1000 - margin.left - margin.right,
                     height = 500 - margin.top - margin.bottom;
 
+//============== scene1 ===============//
 async function load1() {
 
-    // Create an element where the map will take place 
+    //Retrieve scene1
     //Cited: https://bl.ocks.org/d3noob/635735a3de2909ae06669096fbadc0ed
     const scene1 = d3.select("#scene1")
     .append("svg")
@@ -19,13 +16,13 @@ async function load1() {
     .append("g")
       .attr("transform",`translate(${margin.left},${margin.top})`);
   
-  //Read the data
+  //Read the data of daily new covid cases
   d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/new_cases.csv").then(function(data) {
   
-      // List of groups (here I have one group per column)
+      // List of top 4 traveling countries
       const allGroup = ["France", "Korea", "USA", "Turkey"]
   
-      // Reformat the data: we need an array of arrays of {x, y} tuples
+      // Creating arrays of {x, y} tuples
       const dataInput = allGroup.map( function(grpName) { // .map allows to do something for each element of the list
         return {
           name: grpName,
@@ -97,7 +94,7 @@ async function load1() {
       .style("border-radius", "5px")
       .style("padding", "5px")
 
-      // Three function that change the tooltip when user hover / move / leave a cell
+      // functions for tooltip when the mouse hover / move / leave a cell
       const mouseover = function(event,d) {
       Tooltip
           .style("opacity", 1)
@@ -117,13 +114,11 @@ async function load1() {
   
       // Add the points
       scene1
-        // First we need to enter in a group
         .selectAll("myDots")
         .data(dataInput)
         .join('g')
           .style("fill", d => myColor(d.name))
           .attr("class", d => d.name)
-        // Second we need to enter in the 'values' part of this group
         .selectAll("myPoints")
         .data(d => d.values)
         .join("circle")
@@ -135,7 +130,7 @@ async function load1() {
           .on("mousemove", mousemove)
           .on("mouseleave", mouseleave)
   
-      // Add a label at the end of each line
+      // Label of the path
       scene1
         .selectAll("myLabels")
         .data(dataInput)
@@ -149,7 +144,7 @@ async function load1() {
             .style("fill", d => myColor(d.name))
             .style("font-size", 15)
   
-      // Add a legend (interactive)
+      // Legend that could be toggled
       scene1
         .selectAll("myLegend")
         .data(dataInput)
@@ -163,11 +158,11 @@ async function load1() {
           .on("click", function(event,d){
             // is the element currently visible ?
             currentOpacity = d3.selectAll("." + d.name).style("opacity")
-            // Change the opacity: from 0 to 1 or from 1 to 0
+            // Change the opacity: from 0 to 1 or from 1 to 0 --> toggling function
             d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)
   
           })
-  })
+  }) //then(function(data) {
 }
 
 async function load2() {
@@ -193,26 +188,73 @@ async function load2() {
       })
       (sumstat)
   
-    // Add X axis --> it is a date format
+    // Add X axis
     const x = d3.scaleLinear()
       .domain([0, 83])
       .range([ 0, width ]);
+
       scene2.append("g")
       .attr("transform", `translate(0, ${height})`)
-      .call(d3.axisBottom(x).ticks(5));
+      .call(d3.axisBottom(x).ticks(12));
+
+    
+    // Add label for X axis
+    scene2.append("text")             
+    .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                            (height + margin.top + 20) + ")")
+    .style("text-anchor", "middle")
+    .text("Days in 2022");
   
     // Add Y axis
     const y = d3.scaleLinear()
       .domain([0, 2.2])
       .range([ height, 0 ]);
+
       scene2.append("g")
-      .call(d3.axisLeft(y));
-  
+      .call(d3.axisLeft(y).ticks(10));
+
+      scene2.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 200 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Vaccination Rate (%)");
+
     // color palette
     const color = d3.scaleOrdinal()
       .domain(mygroups)
-      .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+      .range(['#5c73e6','#b078f5','#f07e78'])
+    
+    // create a tooltip for mouse hover
+    const Tooltip = d3.select("#scene2")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+    const mouseover = function(event,d) {
+        Tooltip
+            .style("opacity", 1)
+        }
   
+    const mousemove = function(event,d) {
+    Tooltip
+        .html("Country: " + mygroups[d.key-1])
+        .style("left", `${event.layerX+10}px`)
+        .style("top", `${event.layerY}px`)
+    }
+  
+    const mouseleave = function(event,d) {
+    Tooltip
+        .style("opacity", 0)
+    }
+
     // Show the areas
     scene2
       .selectAll("mylayers")
@@ -222,8 +264,34 @@ async function load2() {
         .attr("d", d3.area()
           .x(function(d, i) { return x(d.data[0]); })
           .y0(function(d) { return y(d[0]); })
-          .y1(function(d) { return y(d[1]); })
-      )
+          .y1(function(d) { return y(d[1]); }))
+          .on("mouseover", mouseover)
+          .on("mousemove", mousemove)
+          .on("mouseleave", mouseleave);
+
+
+      
+      // color block next to the legend
+      scene2.selectAll("mycircles")
+        .data(mygroups)
+        .enter()
+        .append("circle")
+          .attr("cx", 480)
+          .attr("cy", function(d,i){ return 100 + i*25 }) 
+          .attr("r", 7)
+          .style("fill", function(d){ return color(d) });
+      
+      // Add one dot in the legend for each name.
+      scene2.selectAll("mylegends")
+        .data(mygroups)
+        .enter()
+        .append("text")
+          .attr("x", 500)
+          .attr("y", function(d,i){ return 100 + i*25 })
+          .style("fill", function(d){ return color(d) })
+          .text(function(d){ return d})
+          .attr("text-anchor", "left")
+          .style("alignment-baseline", "middle");
   })
 }
 
