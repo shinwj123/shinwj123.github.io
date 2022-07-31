@@ -7,8 +7,8 @@ const margin = {top: 10, right: 100, bottom: 30, left: 300},
 //============== scene1 ===============//
 async function load1() {
 
-    //Retrieve scene1
-    //Cited: https://bl.ocks.org/d3noob/635735a3de2909ae06669096fbadc0ed
+    // Retrieve scene1
+    // Work Cited: https://bl.ocks.org/d3noob/635735a3de2909ae06669096fbadc0ed
     const scene1 = d3.select("#scene1")
     .append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -19,153 +19,156 @@ async function load1() {
   //Read the data of daily new covid cases
   d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/new_cases.csv").then(function(data) {
   
-      // List of top 4 traveling countries
-      const allGroup = ["France", "Korea", "USA", "Turkey"]
-  
-      // Creating arrays of {x, y} tuples
-      const dataInput = allGroup.map( function(grpName) { // .map allows to do something for each element of the list
-        return {
-          name: grpName,
-          values: data.map(function(d) {
-            return {time: d.time, value: +d[grpName]};
-          })
-        };
-      });
+    // List of top 4 traveling countries
+    const allGroup = ["France", "Korea", "USA", "Turkey"]
 
-  
-      // A color scale: one color for each group
-      const myColor = d3.scaleOrdinal().domain(allGroup).range(d3.schemeSet2);
-  
-      // Add X axis --> it is a date format
-      const x = d3.scaleLinear()
+    // Creating arrays of {x, y} tuples
+    const dataInput = allGroup.map( function(grpName) { // .map allows to do something for each element of the list
+        return {
+            name: grpName,
+            values: data.map(function(d) {
+            return {time: d.time, value: +d[grpName]};
+            })
+        };
+    });
+
+
+    // A color scale: one color for each group
+    const myColor = d3.scaleOrdinal().domain(allGroup).range(d3.schemeSet2);
+
+    // Add X axis
+    const x = d3.scaleLinear()
         .domain([0, 81])
         .range([ 0, width ]);
 
-        scene1.append("g")
+    scene1.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x));
 
-        // Add label for X axis
-        scene1.append("text")             
+    // Add label for X axis
+    scene1.append("text")             
         .attr("transform",
-              "translate(" + (width/2) + " ," + 
-                             (height + margin.top + 20) + ")")
+                "translate(" + (width/2) + " ," + 
+                                (height + margin.top + 20) + ")")
         .style("text-anchor", "middle")
         .text("Days in 2022");
-  
-      // Add Y axis
-      const y = d3.scaleLinear()
+
+    // Add Y axis
+    const y = d3.scaleLinear()
         .domain( [0,1500000])
         .range([ height, 0 ]);
 
-        scene1.append("g")
+    scene1.append("g")
         .call(d3.axisLeft(y));
 
-        // Add label for Y axis
-        scene1.append("text")
+    // Add label for Y axis
+    scene1.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 200 - margin.left)
         .attr("x",0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("Number of Covid Cases");
-  
-      // Add the lines
-      const line = d3.line()
+
+    // Add the lines
+    const line = d3.line()
         .x(d => x(+d.time))
         .y(d => y(+d.value))
         scene1.selectAll("myLines")
         .data(dataInput)
         .join("path")
-          .attr("class", d => d.name)
-          .attr("d", d => line(d.values))
-          .attr("stroke", d => myColor(d.name))
-          .style("stroke-width", 4)
-          .style("fill", "none")
-
-      // create a tooltip for mouse hover
-      const Tooltip = d3.select("#scene1")
-      .append("div")
-      .style("opacity", 0)
-      .attr("class", "tooltip")
-      .style("background-color", "white")
-      .style("border", "solid")
-      .style("border-width", "2px")
-      .style("border-radius", "5px")
-      .style("padding", "5px")
-
-      // functions for tooltip when the mouse hover / move / leave a cell
-      const mouseover = function(event,d) {
-      Tooltip
-          .style("opacity", 1)
-      }
-
-      const mousemove = function(event,d) {
-      Tooltip
-          .html("Exact value: " + d.value)
-          .style("left", `${event.layerX+10}px`)
-          .style("top", `${event.layerY}px`)
-      }
-
-      const mouseleave = function(event,d) {
-      Tooltip
-          .style("opacity", 0)
-      }
-  
-      // Add the points
-      scene1
-        .selectAll("myDots")
-        .data(dataInput)
-        .join('g')
-          .style("fill", d => myColor(d.name))
-          .attr("class", d => d.name)
-        .selectAll("myPoints")
-        .data(d => d.values)
-        .join("circle")
-          .attr("cx", d => x(d.time))
-          .attr("cy", d => y(d.value))
-          .attr("r", 5)
-          .attr("stroke", "white")
-          .on("mouseover", mouseover)
-          .on("mousemove", mousemove)
-          .on("mouseleave", mouseleave)
-  
-      // Label of the path
-      scene1
-        .selectAll("myLabels")
-        .data(dataInput)
-        .join('g')
-          .append("text")
             .attr("class", d => d.name)
-            .datum(d => { return {name: d.name, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
-            .attr("transform", d => `translate(${x(d.value.time)},${y(d.value.value)})`) // Put the text at the position of the last point
-            .attr("x", 12) // shift the text a bit more right
-            .text(d => d.name)
-            .style("fill", d => myColor(d.name))
-            .style("font-size", 15)
-  
-      // Legend that could be toggled
-      scene1
-        .selectAll("myLegend")
-        .data(dataInput)
-        .join('g')
-          .append("text")
-            .attr('x', (d,i) => 30 + i*60)
-            .attr('y', 30)
-            .text(d => d.name)
-            .style("fill", d => myColor(d.name))
-            .style("font-size", 15)
-          .on("click", function(event,d){
-            // is the element currently visible ?
-            currentOpacity = d3.selectAll("." + d.name).style("opacity")
-            // Change the opacity: from 0 to 1 or from 1 to 0 --> toggling function
-            d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)
-  
-          })
+            .attr("d", d => line(d.values))
+            .attr("stroke", d => myColor(d.name))
+            .style("stroke-width", 4)
+            .style("fill", "none")
+
+    // create a tooltip for mouse hover
+    const Tooltip = d3.select("#scene1")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "2px")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
+
+    // functions for tooltip when the mouse hover / move / leave a cell
+    const mouseover = function(event,d) {
+    Tooltip
+        .style("opacity", 1)
+    }
+
+    const mousemove = function(event,d) {
+    Tooltip
+        .html("nth date of 2022: " + d.time + "Covid Cases: " + d.value)
+        .style("left", `${event.layerX+10}px`)
+        .style("top", `${event.layerY}px`)
+    }
+
+    const mouseleave = function(event,d) {
+    Tooltip
+        .style("opacity", 0)
+    }
+
+    // Add the points
+    scene1
+    .selectAll("myDots")
+    .data(dataInput)
+    .join('g')
+        .style("fill", d => myColor(d.name))
+        .attr("class", d => d.name)
+    .selectAll("myPoints")
+    .data(d => d.values)
+    .join("circle")
+        .attr("cx", d => x(d.time))
+        .attr("cy", d => y(d.value))
+        .attr("r", 5)
+        .attr("stroke", "white")
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
+
+    // Label of the path
+    scene1
+    .selectAll("myLabels")
+    .data(dataInput)
+    .join('g')
+        .append("text")
+        .attr("class", d => d.name)
+        .datum(d => { return {name: d.name, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
+        .attr("transform", d => `translate(${x(d.value.time)},${y(d.value.value)})`) // Put the text at the position of the last point
+        .attr("x", 12) // shift the text a bit more right
+        .text(d => d.name)
+        .style("fill", d => myColor(d.name))
+        .style("font-size", 15)
+
+    // Legend that could be toggled
+    scene1
+    .selectAll("myLegend")
+    .data(dataInput)
+    .join('g')
+        .append("text")
+        .attr('x', (d,i) => 30 + i*60)
+        .attr('y', 30)
+        .text(d => d.name)
+        .style("fill", d => myColor(d.name))
+        .style("font-size", 15)
+        .on("click", function(event,d){
+        // is the element currently visible ?
+        currentOpacity = d3.selectAll("." + d.name).style("opacity")
+        // Change the opacity: from 0 to 1 or from 1 to 0 --> toggling function
+        d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)
+
+        })
   }) //then(function(data) {
-}
+} //async function load1() {
+
 
 async function load2() {
+
+    // Retrieve scene2
     const scene2 = d3.select('#scene2')
     .append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -193,34 +196,35 @@ async function load2() {
       .domain([0, 83])
       .range([ 0, width ]);
 
-      scene2.append("g")
+    scene2.append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(x).ticks(12));
 
     
     // Add label for X axis
     scene2.append("text")             
-    .attr("transform",
-            "translate(" + (width/2) + " ," + 
-                            (height + margin.top + 20) + ")")
-    .style("text-anchor", "middle")
-    .text("Days in 2022");
+        .attr("transform",
+                "translate(" + (width/2) + " ," + 
+                                (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .text("Days in 2022");
   
     // Add Y axis
     const y = d3.scaleLinear()
       .domain([0, 2.2])
       .range([ height, 0 ]);
 
-      scene2.append("g")
+    scene2.append("g")
       .call(d3.axisLeft(y).ticks(10));
 
-      scene2.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 200 - margin.left)
-      .attr("x",0 - (height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Vaccination Rate (%)");
+    // Add label for Y axis
+    scene2.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 200 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Vaccination Rate (%)");
 
     // color palette
     const color = d3.scaleOrdinal()
@@ -229,30 +233,31 @@ async function load2() {
     
     // create a tooltip for mouse hover
     const Tooltip = d3.select("#scene2")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "2px")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
 
+    // functions for tooltip when the mouse hover / move / leave a cell
     const mouseover = function(event,d) {
         Tooltip
             .style("opacity", 1)
         }
   
     const mousemove = function(event,d) {
-    Tooltip
-        .html("Country: " + mygroups[d.key-1])
-        .style("left", `${event.layerX+10}px`)
-        .style("top", `${event.layerY}px`)
+        Tooltip
+            .html("Country: " + mygroups[d.key-1])
+            .style("left", `${event.layerX+10}px`)
+            .style("top", `${event.layerY}px`)
     }
   
     const mouseleave = function(event,d) {
-    Tooltip
-        .style("opacity", 0)
+        Tooltip
+            .style("opacity", 0)
     }
 
     // Show the areas
@@ -269,33 +274,35 @@ async function load2() {
           .on("mousemove", mousemove)
           .on("mouseleave", mouseleave);
 
-
-      
-      // color block next to the legend
-      scene2.selectAll("mycircles")
+    // color block next to the legend
+    scene2.selectAll("mycircles")
         .data(mygroups)
         .enter()
         .append("circle")
-          .attr("cx", 480)
-          .attr("cy", function(d,i){ return 100 + i*25 }) 
-          .attr("r", 7)
-          .style("fill", function(d){ return color(d) });
-      
-      // Add one dot in the legend for each name.
-      scene2.selectAll("mylegends")
+        .attr("cx", 480)
+        .attr("cy", function(d,i){ return 100 + i*25 }) 
+        .attr("r", 7)
+        .style("fill", function(d){ return color(d) });
+
+    // Add one dot in the legend for each name.
+    scene2.selectAll("mylegends")
         .data(mygroups)
         .enter()
         .append("text")
-          .attr("x", 500)
-          .attr("y", function(d,i){ return 100 + i*25 })
-          .style("fill", function(d){ return color(d) })
-          .text(function(d){ return d})
-          .attr("text-anchor", "left")
-          .style("alignment-baseline", "middle");
-  })
-}
+        .attr("x", 500)
+        .attr("y", function(d,i){ return 100 + i*25 })
+        .style("fill", function(d){ return color(d) })
+        .text(function(d){ return d})
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle");
+  }) //then(function(data) {
+} //async function load2() {
 
+//============== scene3 ===============//
 async function load3() {
+
+    // Retrieve scene3
+    // Work Cited: https://bl.ocks.org/d3noob/f46a355d35077a7dc12f9a97aeb6bc5d
     const scene3 = d3.select('#scene3')
     .append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -305,6 +312,100 @@ async function load3() {
 
       d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/avgHosp_vs_avgDeath.csv", function(data) {
 
+    // Add X axis
+    const x = d3.scaleLinear()
+        .domain([0, 260])
+        .range([ 0, width ]);
+
+    scene3.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // Add label for X axis
+    scene3.append("text")             
+        .attr("transform",
+                "translate(" + (width/2) + " ," + 
+                                (height + margin.top + 20) + ")")
+        .style("text-anchor", "middle")
+        .text("Average COVID-19 Death Numbers in 2022");
+
+    // Add Y axis
+    const y = d3.scaleLinear()
+    .domain([3600, 70000])
+    .range([ height, 0]);
+
+    scene3.append("g")
+        .call(d3.axisLeft(y));
+
+    // Add label for Y axis
+    scene3.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 200 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Average COVID-19 Hospitalization Numbers in 2022");
+
+    // Add the factor for the size of the plotted values
+    const z = d3.scaleLinear()
+        .domain([200000, 337000000])
+        .range([ 4, 40]);
+
+    // Add color in scatter plot based on the continent values
+    const myColor = d3.scaleOrdinal()
+        .domain(["Asia", "Europe", "Americas", "Africa", "Oceania"])
+        .range(d3.schemeSet2);
+
+    // Tooltip creation for mouse movement 
+    const Tooltip = d3.select("#my_dataviz")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "black")
+        .style("border-radius", "5px")
+        .style("padding", "10px")
+        .style("color", "white")
+
+    // functions for tooltip when the mouse hover / move / leave a cell
+    const mouseover = function(d) {
+        Tooltip
+        .transition()
+        .duration(200)
+
+        Tooltip
+        .style("opacity", 1)
+        .html("Country: " + d.country + "  |  " + "Population: " + d.pop + "  |  " + "Death rate when hospitalized: " + d.avgDeath/d.avgHosp)            
+        .style("left", (d3.mouse(this)[0]+30) + "px")
+        .style("top", (d3.mouse(this)[1]+30) + "px")
+    }
+
+    const mousemove = function(d) {
+        Tooltip
+        .style("left", (d3.mouse(this)[0]+30) + "px")
+        .style("top", (d3.mouse(this)[1]+30) + "px")
+    }
+
+    const mouseleave = function(d) {
+        Tooltip
+        .transition()
+        .duration(200)
+        .style("opacity", 0)
+    }
+
+    // Draw the Scattor plot
+    scene3.append('g')
+        .selectAll("dot")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("class", "bubbles")
+        .attr("cx", function (d) { return x(d.avgDeath); } )
+        .attr("cy", function (d) { return y(d.avgHosp); } )
+        .attr("r", function (d) { return z(d.pop); } )
+        .style("fill", function (d) { return myColor(d.continent); } )
+        .on("mouseover", mouseover )
+        .on("mousemove", mousemove )
+        .on("mouseleave", mouseleave )
         
-  })
-}
+  }) //then(function(data) {
+} //async function load3() {
