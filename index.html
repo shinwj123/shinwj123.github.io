@@ -60,7 +60,14 @@
             .attr("transform",`translate(${margin.left},${margin.top})`);
 
             //Read the data
-            d3.csv("https://shinwj123.github.io/covid_cases.csv").then(function(data) {
+            d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/covid_cases.csv",
+
+            // When reading the csv, I must format variables:
+            d => {
+                return {date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value}}).then(
+                   
+
+            function(data) {
 
             // List of groups (here I have one group per column)
             const allGroup = ["France", "United States", "South Korea"]
@@ -73,9 +80,9 @@
                 return {date: d.date, value: +d[grpName]};
                 })
             };
-            });
+            })
             // I strongly advise to have a look to dataReady with
-            // console.log(dataReady)
+            console.log(dataReady)
 
             // A color scale: one color for each group
             const myColor = d3.scaleOrdinal()
@@ -83,8 +90,8 @@
             .range(d3.schemeSet2);
 
             // Add X axis --> it is a date format
-            const x = d3.scaleLinear()
-            .domain([0,10])
+            const x = d3.scaleTime()
+            .domain(d3.extent(data, d => d.date))
             .range([ 0, width ]);
             svg.append("g")
             .attr("transform", `translate(0, ${height})`)
