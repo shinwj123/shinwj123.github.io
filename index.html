@@ -63,7 +63,7 @@
                 d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/cases.csv").then(function(data) {
                 
                     // List of groups (here I have one group per column)
-                    const allGroup = ["valueA", "valueB", "valueC"]
+                    const allGroup = ["France", "Korea", "USA"]
                 
                     // Reformat the data: we need an array of arrays of {x, y} tuples
                     const dataReady = allGroup.map( function(grpName) { // .map allows to do something for each element of the list
