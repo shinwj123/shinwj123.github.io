@@ -303,9 +303,8 @@ async function load3() {
     .append("g")
       .attr("transform",`translate(${margin.left},${margin.top})`);
 
-  d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/hosp_vs_death.csv").then(function(data) {
-    
-    
+      d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/avgHosp_vs_avgDeath.csv", function(data) {
 
+        
   })
 }
