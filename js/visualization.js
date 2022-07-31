@@ -357,7 +357,7 @@ async function load3() {
         .range(d3.schemeSet2);
 
     // Tooltip creation for mouse movement 
-    const Tooltip = d3.select("#my_dataviz")
+    const Tooltip = d3.select("#scene3")
         .append("div")
         .style("opacity", 0)
         .attr("class", "tooltip")
