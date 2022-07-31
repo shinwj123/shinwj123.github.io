@@ -29,10 +29,18 @@
                     <a href="#three" class="contents">Covid Testing</a>
                 </li>
             </ul>
+            <hr>
+        </div>
 
-            <!-- Initialize a select button -->     
-            <select id="selectButton"></select>
+        <!-- scene1 -->
+        <hr>
+            <h2>Covid Cases</h2> 
+            <p>Hover over the map to see the daily Covid Cases value </p>
 
+            <!-- Create an element where the map will take place 
+            Cited: https://d3-graph-gallery.com/graph/choropleth_hover_effect.html-->
+
+            
             <!-- Create a div where the graph will take place -->
             <div id="my_dataviz"></div>
 
@@ -125,7 +133,7 @@
                 .style("left", `${event.layerX+10}px`)
                 .style("top", `${event.layerY}px`)
             }
-            
+
             const mouseleave = function(event,d) {
             Tooltip
                 .style("opacity", 0)
@@ -188,19 +196,6 @@
                 })
             })
             </script> 
-
-            <hr>
-        </div>
-
-        <!-- scene1 -->
-        <hr>
-            <h2>Covid Cases</h2> 
-            <p>Hover over the map to see the daily Covid Cases value </p>
-
-            <!-- Create an element where the map will take place 
-            Cited: https://d3-graph-gallery.com/graph/choropleth_hover_effect.html-->
-
-            
             
             <a href="#intro" class="back">Back to Top</a>
             <a href="#two" class="back">Next</a>
