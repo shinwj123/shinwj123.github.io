@@ -13,7 +13,7 @@
         <!-- Load in custom CSS -->
         <!-- <link rel="stylesheet" type="text/css" href="./cs/style.css"> -->
     </head>
-    <body onload="load1();">
+    <body onload="load1(); load2();">
         <h1 id="intro">PanExpedia Narrative Visualization for TOP 4 Most Visited Countries</h1>
         <div>
             <span class="italic">Wonjong (Jeff) Shin</span>
@@ -39,13 +39,9 @@
         <hr>
             <h2>Covid Cases</h2> 
             <p>Hover over the map to see the daily Covid Cases value </p>
-
-            <!-- Create an element where the map will take place 
-            Cited: https://d3-graph-gallery.com/graph/choropleth_hover_effect.html-->
-
             
-            <!-- Create a div where the graph will take place -->
-            <div id="scene1"></div>
+            <!-- multi line graphs -->
+            <div id="scene1" width=1100 height=500></div>
             
             <a href="#intro" class="back">Back to Top</a>
             <a href="#two" class="back">Next</a>
@@ -53,7 +49,10 @@
 
         <!-- scene2 -->
         <hr>
-            <h2>Covid Vaccination Rate</h2>
+            <h2>Covid Vaccination Rate Comparison </h2>
+
+            <!-- multi area graphs -->
+            <div id="scene2" width=1100 height=500></div>
 
             <a href="#intro" class="back">Back to Top</a>
             <a href="#one" class="back">Previous</a>
