@@ -296,14 +296,16 @@ async function load2() {
 }
 
 async function load3() {
-    const scene2 = d3.select('#scene3')
+    const scene3 = d3.select('#scene3')
     .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform",`translate(${margin.left},${margin.top})`);
 
-  d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/..").then(function(data) {
+  d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/hosp_vs_death.csv").then(function(data) {
+    
+    
 
   })
 }
