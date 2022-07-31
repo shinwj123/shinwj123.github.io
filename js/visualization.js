@@ -102,7 +102,7 @@ async function load1() {
 
     const mousemove = function(event,d) {
     Tooltip
-        .html("nth date of 2022: " + d.time + "Covid Cases: " + d.value)
+        .html("n-th date of 2022: " + d.time + "  |  "+ "Covid Cases: " + d.value)
         .style("left", `${event.layerX+10}px`)
         .style("top", `${event.layerY}px`)
     }
@@ -303,24 +303,24 @@ async function load3() {
 
     // Retrieve scene3
     // Work Cited: https://bl.ocks.org/d3noob/f46a355d35077a7dc12f9a97aeb6bc5d
-    const scene3 = d3.select('#scene3')
+    var scene3 = d3.select('#scene3')
     .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform",`translate(${margin.left},${margin.top})`);
 
-      d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/avgHosp_vs_avgDeath.csv", function(data) {
+    d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/avgHosp_vs_avgDeath.csv", function(data) {
 
     // Add X axis
     const x = d3.scaleLinear()
         .domain([0, 260])
         .range([ 0, width ]);
-
+    
     scene3.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
-
+    
     // Add label for X axis
     scene3.append("text")             
         .attr("transform",
@@ -328,15 +328,15 @@ async function load3() {
                                 (height + margin.top + 20) + ")")
         .style("text-anchor", "middle")
         .text("Average COVID-19 Death Numbers in 2022");
-
+    
     // Add Y axis
     const y = d3.scaleLinear()
-    .domain([3600, 70000])
-    .range([ height, 0]);
-
+        .domain([3600, 70000])
+        .range([ height, 0]);
+    
     scene3.append("g")
         .call(d3.axisLeft(y));
-
+    
     // Add label for Y axis
     scene3.append("text")
         .attr("transform", "rotate(-90)")
@@ -345,17 +345,17 @@ async function load3() {
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("Average COVID-19 Hospitalization Numbers in 2022");
-
+    
     // Add the factor for the size of the plotted values
     const z = d3.scaleLinear()
         .domain([200000, 337000000])
         .range([ 4, 40]);
-
+    
     // Add color in scatter plot based on the continent values
     const myColor = d3.scaleOrdinal()
         .domain(["Asia", "Europe", "Americas", "Africa", "Oceania"])
         .range(d3.schemeSet2);
-
+    
     // Tooltip creation for mouse movement 
     const Tooltip = d3.select("#scene3")
         .append("div")
@@ -365,47 +365,49 @@ async function load3() {
         .style("border-radius", "5px")
         .style("padding", "10px")
         .style("color", "white")
-
+    
     // functions for tooltip when the mouse hover / move / leave a cell
     const mouseover = function(d) {
         Tooltip
         .transition()
         .duration(200)
-
+    
         Tooltip
         .style("opacity", 1)
-        .html("Country: " + d.country + "  |  " + "Population: " + d.pop + "  |  " + "Death rate when hospitalized: " + d.avgDeath/d.avgHosp)            
+        .html("Country: " + d.country + "  |  " 
+            + "Population: " + d.pop + "  |  " 
+            + "Death rate when hospitalized: " + d.avgDeath/d.avgHosp)            
         .style("left", (d3.mouse(this)[0]+30) + "px")
         .style("top", (d3.mouse(this)[1]+30) + "px")
     }
-
+    
     const mousemove = function(d) {
         Tooltip
         .style("left", (d3.mouse(this)[0]+30) + "px")
         .style("top", (d3.mouse(this)[1]+30) + "px")
     }
-
+    
     const mouseleave = function(d) {
         Tooltip
         .transition()
         .duration(200)
         .style("opacity", 0)
     }
-
+    
     // Draw the Scattor plot
     scene3.append('g')
         .selectAll("dot")
         .data(data)
         .enter()
         .append("circle")
-        .attr("class", "bubbles")
-        .attr("cx", function (d) { return x(d.avgDeath); } )
-        .attr("cy", function (d) { return y(d.avgHosp); } )
-        .attr("r", function (d) { return z(d.pop); } )
-        .style("fill", function (d) { return myColor(d.continent); } )
+            .attr("class", "bubbles")
+            .attr("cx", function (d) { return x(d.avgDeath); } )
+            .attr("cy", function (d) { return y(d.avgHosp); } )
+            .attr("r", function (d) { return z(d.pop); } )
+            .style("fill", function (d) { return myColor(d.continent); } )
         .on("mouseover", mouseover )
         .on("mousemove", mousemove )
         .on("mouseleave", mouseleave )
-        
-  }) //then(function(data) {
+    
+    }) //then(function(data) {
 } //async function load3() {
