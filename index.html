@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!-- Load in D3 -->
+    <script src="https://d3js.org/d3.v6.js"></script>
+
+    <!-- Load color scale -->
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <!-- Script -->
+    <script src="./js/visualization.js"></script>
+    
     <head>
         <meta charset="utf-8">
         <title>PanExpedia Narrative Visualization</title>
-
-        <!-- Load in D3 -->
-        <script src="https://d3js.org/d3.v6.js"></script>
-
-        <!-- Load color scale -->
-        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-
-        <!-- Script -->
-        <script src="./js/visualization.js"></script>
-
         <!-- Load in custom CSS -->
-        <!-- <link rel="stylesheet" type="text/css" href="./cs/style.css"> -->
+        <link rel="stylesheet" type="text/css" href="./cs/style.css">
     </head>
     <body onload="load1(); load2(); load3();">
         <h1 id="intro">PanExpedia Narrative Visualization for TOP 4 Most Visited Countries</h1>
@@ -49,8 +48,8 @@
             <!-- multi line graphs -->
             <div id="scene1"></div>
 
-            <h3> This chart element is very helpful to compare the trend of COVID-19 positive cases in each countries. By clicking each countries, you can focus on specific country's covid cases trend to create the conclusion regarding whether this country is dangerous or comparably less dangerous to travel. </h3>
-            <h3> Users can also see the certain number of the data when hover over the dot value. It shows the number of Covid cases in particular country on the n-th date of 2022. </h3>
+            <p> This chart element is very helpful to compare the trend of COVID-19 positive cases in each countries. By clicking each countries, you can focus on specific country's covid cases trend to create the conclusion regarding whether this country is dangerous or comparably less dangerous to travel. </p>
+            <p> Users can also see the certain number of the data when hover over the dot value. It shows the number of Covid cases in particular country on the n-th date of 2022. </p>
             
             <a href="#intro" class="back">Back to Top</a>
             <a href="#two" class="back">Next</a>
@@ -63,9 +62,9 @@
             <!-- multi area graphs -->
             <div id="scene2"></div>
             
-            <h3> Even the Covid Cases are bit high, the more vaccination would be also an indication of the safeness to travel in the certain country. Users can compare the tred of the vaccination rate and output the conclusion whether the destination country is safe to travel or not.</h3>
-            <h3> The y-axis value of this chart is a percentage of the vaccination rate based on the daily vaccination number and population. Typically most countries have a daily vaccinater rate between 1% ~ 2% of the population. </h3>
-            <h3> If the user want to check the country of the certain value of the graph, user can hover over the value point and it will indicate which country it is.</h3>
+            <p> Even the Covid Cases are bit high, the more vaccination would be also an indication of the safeness to travel in the certain country. Users can compare the tred of the vaccination rate and output the conclusion whether the destination country is safe to travel or not.</p>
+            <p> The y-axis value of this chart is a percentage of the vaccination rate based on the daily vaccination number and population. Typically most countries have a daily vaccinater rate between 1% ~ 2% of the population. </p>
+            <p> If the user want to check the country of the certain value of the graph, user can hover over the value point and it will indicate which country it is.</p>
 
             <a href="#intro" class="back">Back to Top</a>
             <a href="#one" class="back">Previous</a>
@@ -79,11 +78,11 @@
             <!-- bubble scatter plot-->
             <div id="scene3"></div>
 
-            <h3> This scene is very important to the travelers all the time, but especially during the global pandemic. Users can check what percentage of the hospitalized patients passes away. This could be the indicator of how well the medical service in certain countries are managed during the global pandemic. This is highly important due to the increase number of hospitalized patients and decreasing of the available medical staff to take care fo the patients. PanExpedia team members do not want our users to get sick at the first point, but we also do not want users to get get enough medical care when they are in the sever condition. </h3>
-            <h3> The y-axis value of this chart is the (average of daily COVID-19 related hospitalization number) / (average of daily COVID-19 related death number). This would let users to conclude which country has more higher rate to die when hospitalized due to the shortage of medical support. Therefore, the higher in the hospitalization number and the lower in the death number, patients are likely to get sufficient medical support to prevent from the death. </h3>
-            <h3> The size of the bubble indicates the population, the bigger size of the bubble, the larger population number.</h3>
-            <h3> The color of the bubble indicates the continent that the country is located in. </h3>
-            <h3> If the user want to check which country the corresponding bubble is, then they could hover over the bubble and they would also see the population of the corresponding country and its death rate when hospitalized due to COVID-19.</h3>
+            <p> This scene is very important to the travelers all the time, but especially during the global pandemic. Users can check what percentage of the hospitalized patients passes away. This could be the indicator of how well the medical service in certain countries are managed during the global pandemic. This is highly important due to the increase number of hospitalized patients and decreasing of the available medical staff to take care fo the patients. PanExpedia team members do not want our users to get sick at the first point, but we also do not want users to get get enough medical care when they are in the sever condition. </p>
+            <p> The y-axis value of this chart is the (average of daily COVID-19 related hospitalization number) / (average of daily COVID-19 related death number). This would let users to conclude which country has more higher rate to die when hospitalized due to the shortage of medical support. Therefore, the higher in the hospitalization number and the lower in the death number, patients are likely to get sufficient medical support to prevent from the death. </p>
+            <p> The size of the bubble indicates the population, the bigger size of the bubble, the larger population number.</h3>
+            <p> The color of the bubble indicates the continent that the country is located in. </h3>
+            <p> If the user want to check which country the corresponding bubble is, then they could hover over the bubble and they would also see the population of the corresponding country and its death rate when hospitalized due to COVID-19.</p>
 
             <a href="#intro" class="back">Back to Top</a>
             <a href="#two" class="back">Previous</a>
