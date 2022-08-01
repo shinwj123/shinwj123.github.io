@@ -162,6 +162,15 @@ async function load1() {
         d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)
 
         })
+
+    //Add annotation
+    scene1.append("text")
+    .attr("y", 250)
+    .attr("x",500)
+    .style("text-anchor", "middle")
+    .style("font-size", 13)
+    .text("Korea's COVID positive cases are peaking.");
+
   }) //then(function(data) {
 } //async function load1() {
 
@@ -295,6 +304,14 @@ async function load2() {
         .text(function(d){ return d})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle");
+
+    //Add annotation
+    scene2.append("text")
+        .attr("y", 300)
+        .attr("x",500)
+        .style("text-anchor", "middle")
+        .style("font-size", 13)
+        .text("Vaccination rate among countries are falling down.");
   }) //then(function(data) {
 } //async function load2() {
 
@@ -406,6 +423,14 @@ d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/dat
         .on("mouseover", mouseover )
         .on("mousemove", mousemove )
         .on("mouseleave", mouseleave )
+
+    //Add annotation
+    scene3.append("text")
+        .attr("y", 120)
+        .attr("x",450)
+        .style("text-anchor", "middle")
+        .style("font-size", 13)
+        .text("USA doesn't have a relatively great hospitalizaion / death ratio");
 
     }) //then(function(data) {
 } //async function load3() {
