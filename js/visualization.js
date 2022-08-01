@@ -301,112 +301,105 @@ async function load2() {
 //============== scene3 ===============//
 async function load3() {
 
-    // Retrieve scene3
+        // Retrieve scene3
     // Work Cited: https://bl.ocks.org/d3noob/f46a355d35077a7dc12f9a97aeb6bc5d
-    const scene3 = d3.select('#scene3')
-    .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform",`translate(${margin.left},${margin.top})`);
+const svg = d3.select("#scene3")
+.append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+.append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/avgHosp_vs_avgDeath.csv", function(data) {
+d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/data/avgHosp_vs_avgDeath.csv").then( function(data) {
 
-    // Add X axis
-    const x = d3.scaleLinear()
-        .domain([0, 260])
-        .range([ 0, width ]);
-    
-    scene3.append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(d3.axisBottom(x));
-    
-    // Add label for X axis
-    scene3.append("text")             
-        .attr("transform",
-                "translate(" + (width/2) + " ," + 
-                                (height + margin.top + 20) + ")")
-        .style("text-anchor", "middle")
-        .text("Average COVID-19 Death Numbers in 2022");
-    
-    // Add Y axis
-    const y = d3.scaleLinear()
-        .domain([3600, 70000])
-        .range([ height, 0]);
-    
-    scene3.append("g")
-        .call(d3.axisLeft(y));
-    
-    // Add label for Y axis
-    scene3.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 200 - margin.left)
-        .attr("x",0 - (height / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("Average COVID-19 Hospitalization Numbers in 2022");
-    
-    // Add the factor for the size of the plotted values
-    const z = d3.scaleLinear()
-        .domain([200000, 337000000])
-        .range([ 4, 40]);
-    
-    // Add color in scatter plot based on the continent values
-    const myColor = d3.scaleOrdinal()
-        .domain(["Asia", "Europe", "Americas", "Africa", "Oceania"])
-        .range(d3.schemeSet2);
-    
-    // Tooltip creation for mouse movement 
-    const Tooltip = d3.select("#scene3")
-        .append("div")
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("background-color", "black")
-        .style("border-radius", "5px")
-        .style("padding", "10px")
-        .style("color", "white")
-    
-    // functions for tooltip when the mouse hover / move / leave a cell
-    const mouseover = function(event, d) {
-        Tooltip
-        .transition()
-        .duration(200)
-    
-        Tooltip
-        .style("opacity", 1)
-        .html("Country: " + d.country + "  |  " 
-            + "Population: " + d.pop + "  |  " 
-            + "Death rate when hospitalized: " + d.avgDeath/d.avgHosp)            
-        .style("left", (event.x)/2 + "px")
-        .style("top", (event.y)/2+30 + "px")
-    }
-    
-    const mousemove = function(d) {
-        Tooltip
-        .style("left", (event.x)/2 + "px")
-        .style("top", (event.y)/2+30 + "px")
-    }
-    
-    const mouseleave = function(d) {
-        Tooltip
-        .transition()
-        .duration(200)
-        .style("opacity", 0)
-    }
-    
-    // Draw the Scattor plot
-    scene3.append('g')
-        .selectAll("dot")
-        .data(data)
-        .join("circle")
-            .attr("class", "bubbles")
-            .attr("cx", d => x(d.avgDeath))
-            .attr("cy", d => y(d.avgHosp))
-            .attr("r", d => z(d.pop))
-            .style("fill", d => myColor(d.continent))
-        .on("mouseover", mouseover )
-        .on("mousemove", mousemove )
-        .on("mouseleave", mouseleave )
-    
-    }) //then(function(data) {
+// Add X axis
+const x = d3.scaleLinear()
+  .domain([0, 260])
+  .range([ 0, width ]);
+svg.append("g")
+  .attr("transform", `translate(0, ${height})`)
+  .call(d3.axisBottom(x));
+
+// Add label for X axis
+svg.append("text")             
+  .attr("transform",
+          "translate(" + (width/2) + " ," + 
+                          (height + margin.top + 20) + ")")
+  .style("text-anchor", "middle")
+  .text("Average COVID-19 Death Numbers in 2022");
+
+// Add Y axis
+const y = d3.scaleLinear()
+  .domain([3600, 70000])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+
+// Add label for Y axis
+svg.append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("y", 200 - margin.left)
+  .attr("x",0 - (height / 2))
+  .attr("dy", "1em")
+  .style("text-anchor", "middle")
+  .text("Average COVID-19 Hospitalization Numbers in 2022");
+
+  // Add the factor for the size of the plotted values
+  const z = d3.scaleLinear()
+  .domain([200000, 337000000])
+  .range([ 4, 40]);
+
+  // Add color in scatter plot based on the continent values
+  const myColor = d3.scaleOrdinal()
+  .domain(["Asia", "Europe", "Americas", "Africa", "Oceania"])
+  .range(d3.schemeSet2);
+
+  // Tooltip creation for mouse movement 
+  const tooltip = d3.select("#scene3")
+  .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "black")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+    .style("color", "white")
+
+  // functions for tooltip when the mouse hover / move / leave a cell
+const showTooltip = function(event, d) {
+  tooltip
+    .transition()
+    .duration(200)
+  tooltip
+    .style("opacity", 1)
+    .html("Country: " + d.country)
+    .style("left", (event.x)/2 + "px")
+    .style("top", (event.y)/2+30 + "px")
+}
+const moveTooltip = function(event, d) {
+  tooltip
+    .style("left", (event.x)/2 + "px")
+    .style("top", (event.y)/2+30 + "px")
+}
+const hideTooltip = function(event, d) {
+  tooltip
+    .transition()
+    .duration(200)
+    .style("opacity", 0)
+}
+
+  // Draw the Scattor plot
+svg.append('g')
+  .selectAll("dot")
+  .data(data)
+  .join("circle")
+    .attr("class", "bubbles")
+    .attr("cx", d => x(d.avgDeath))
+    .attr("cy", d => y(d.avgHosp))
+    .attr("r", d => z(d.pop))
+    .style("fill", d => myColor(d.continent))
+  .on("mouseover", showTooltip )
+  .on("mousemove", moveTooltip )
+  .on("mouseleave", hideTooltip )
+
+}) //then(function(data) {
 } //async function load3() {
