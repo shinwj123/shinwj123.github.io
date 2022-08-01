@@ -89,3 +89,14 @@ li {
     letter-spacing: 1px;
     line-height: 3;
 }
+
+label,
+text, a {
+    color: #111;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    font-weight: 150;
+    letter-spacing: 1px;
+    line-height: 1.5;
+    text-align: center;
+}
