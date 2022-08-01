@@ -373,7 +373,9 @@ d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/dat
             .duration(200)
         tooltip
             .style("opacity", 1)
-            .html("Country: " + d.country)
+            .html("Country: " + d.country + "  |  " 
+          + "Population: " + d.pop + "  |  " 
+          + "Death rate when hospitalized: " + d.avgDeath/d.avgHosp)
             .style("left", (event.x)/2 + "px")
             .style("top", (event.y)/2+30 + "px")
     }
