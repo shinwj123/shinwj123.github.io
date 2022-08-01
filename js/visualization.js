@@ -303,7 +303,7 @@ async function load3() {
 
         // Retrieve scene3
     // Work Cited: https://bl.ocks.org/d3noob/f46a355d35077a7dc12f9a97aeb6bc5d
-const svg = d3.select("#scene3")
+const scene3 = d3.select("#scene3")
 .append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
@@ -316,12 +316,12 @@ d3.csv("https://raw.githubusercontent.com/shinwj123/shinwj123.github.io/main/dat
 const x = d3.scaleLinear()
   .domain([0, 260])
   .range([ 0, width ]);
-svg.append("g")
+  scene3.append("g")
   .attr("transform", `translate(0, ${height})`)
   .call(d3.axisBottom(x));
 
 // Add label for X axis
-svg.append("text")             
+scene3.append("text")             
   .attr("transform",
           "translate(" + (width/2) + " ," + 
                           (height + margin.top + 20) + ")")
@@ -332,11 +332,11 @@ svg.append("text")
 const y = d3.scaleLinear()
   .domain([3600, 70000])
   .range([ height, 0]);
-svg.append("g")
+  scene3.append("g")
   .call(d3.axisLeft(y));
 
 // Add label for Y axis
-svg.append("text")
+scene3.append("text")
   .attr("transform", "rotate(-90)")
   .attr("y", 200 - margin.left)
   .attr("x",0 - (height / 2))
@@ -388,7 +388,7 @@ const hideTooltip = function(event, d) {
 }
 
   // Draw the Scattor plot
-svg.append('g')
+  scene3.append('g')
   .selectAll("dot")
   .data(data)
   .join("circle")
