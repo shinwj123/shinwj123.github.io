@@ -318,7 +318,7 @@ async function load3() {
         .range([ 0, width ]);
     
     scene3.append("g")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x));
     
     // Add label for X axis
@@ -367,7 +367,7 @@ async function load3() {
         .style("color", "white")
     
     // functions for tooltip when the mouse hover / move / leave a cell
-    const mouseover = function(d) {
+    const mouseover = function(event, d) {
         Tooltip
         .transition()
         .duration(200)
@@ -377,14 +377,14 @@ async function load3() {
         .html("Country: " + d.country + "  |  " 
             + "Population: " + d.pop + "  |  " 
             + "Death rate when hospitalized: " + d.avgDeath/d.avgHosp)            
-        .style("left", (d3.mouse(this)[0]+30) + "px")
-        .style("top", (d3.mouse(this)[1]+30) + "px")
+        .style("left", (event.x)/2 + "px")
+        .style("top", (event.y)/2+30 + "px")
     }
     
     const mousemove = function(d) {
         Tooltip
-        .style("left", (d3.mouse(this)[0]+30) + "px")
-        .style("top", (d3.mouse(this)[1]+30) + "px")
+        .style("left", (event.x)/2 + "px")
+        .style("top", (event.y)/2+30 + "px")
     }
     
     const mouseleave = function(d) {
@@ -398,8 +398,7 @@ async function load3() {
     scene3.append('g')
         .selectAll("dot")
         .data(data)
-        .enter()
-        .append("circle")
+        .join("circle")
             .attr("class", "bubbles")
             .attr("cx", function (d) { return x(d.avgDeath); } )
             .attr("cy", function (d) { return y(d.avgHosp); } )
